@@ -27,7 +27,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
         ゲーム設定
       </h2>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {/* オカ設定 */}
         <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-4 rounded-xl border border-pink-200">
           <label className="block text-sm font-medium text-purple-800 mb-2">
@@ -63,6 +63,39 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
               </option>
             ))}
           </select>
+        </div>
+
+        {/* 持ち点・返し点設定 */}
+        <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-4 rounded-xl border border-yellow-200">
+          <label className="block text-sm font-medium text-orange-800 mb-2">
+            点数設定
+          </label>
+          <div className="space-y-2">
+            <div>
+              <span className="text-xs text-orange-700">持ち点:</span>
+              <input
+                type="number"
+                value={settings.startingPoints}
+                onChange={(e) => onSettingsChange({
+                  ...settings, 
+                  startingPoints: parseInt(e.target.value) || 0
+                })}
+                className="w-full px-2 py-1 border border-yellow-200 rounded text-xs"
+              />
+            </div>
+            <div>
+              <span className="text-xs text-orange-700">返し点:</span>
+              <input
+                type="number"
+                value={settings.returnPoints}
+                onChange={(e) => onSettingsChange({
+                  ...settings, 
+                  returnPoints: parseInt(e.target.value) || 0
+                })}
+                className="w-full px-2 py-1 border border-yellow-200 rounded text-xs"
+              />
+            </div>
+          </div>
         </div>
 
         {/* ウマ設定 */}

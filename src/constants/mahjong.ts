@@ -9,9 +9,11 @@ export const DEFAULT_PLAYERS: Player[] = [
 ];
 
 export const DEFAULT_SETTINGS: Settings = {
-  oka: 20000,
-  uma: { first: 20, second: 10, third: -10, fourth: -20 },
-  rate: 3
+  oka: 20000,  // 保持（互換性のため）
+  uma: { first: 30, second: 10, third: -10, fourth: -30 },
+  rate: 3,     // 保持（今回は使用しない）
+  startingPoints: 25000,  // 25000点持ち
+  returnPoints: 30000     // 30000点返し
 };
 
 export const RATE_OPTIONS = [

@@ -7,8 +7,9 @@ import { Player, Settings as SettingsType, Result } from '@/types/mahjong';
 import { DEFAULT_PLAYERS, DEFAULT_SETTINGS } from '@/constants/mahjong';
 import SettingsPanel from '@/components/MahjongCalculator/SettingsPanel';
 import PlayerInput from '@/components/MahjongCalculator/PlayerInput';
-import ActionButtons from '@/components/MahjongCalculator/ActionButtons';
 import ResultsDisplay from '@/components/MahjongCalculator/ResultsDisplay';
+import ActionButtons from '@/components/MahjongCalculator/ActionButtons';
+import { calculateMahjongResults, validateCalculationSum, debugCalculation } from '@/utils/calculationUtils';
 
 export default function Home() {
   // State管理
@@ -43,32 +44,24 @@ export default function Home() {
 
   // 精算計算
   const handleCalculate = () => {
-    // プレイヤーをスコア順にソート
-    const sortedPlayers = [...players]
-      .map((player, index) => ({ ...player, originalIndex: index }))
-      .sort((a, b) => b.score - a.score);
-
-    // 精算計算
-    const calculations = sortedPlayers.map((player, rank) => {
-      const rawScore = player.score - settings.oka;
-      const umaPoints = Object.values(settings.uma)[rank];
-      const totalPoints = Math.floor((rawScore / 1000) * settings.rate) + umaPoints;
-      
-      return {
-        ...player,
-        rank: rank + 1,
-        rawScore,
-        umaPoints,
-        totalPoints
-      };
-    });
-
+    const calculations = calculateMahjongResults(players, settings);
+    
+    // デバッグ出力（開発時のみ）
+    debugCalculation(calculations, settings);
+    
+    // 計算結果の検証
+    if (!validateCalculationSum(calculations)) {
+      console.warn('計算結果の合計がゼロになっていません。計算式を確認してください。');
+    } else {
+      console.log('✅ 計算結果の合計は正しくゼロです。');
+    }
+    
     setResults(calculations);
   };
 
   // リセット
   const handleReset = () => {
-    setPlayers(players.map(player => ({ ...player, score: 25000 })));
+    setPlayers(players.map(player => ({ ...player, score: settings.startingPoints })));
     setResults(null);
   };
 

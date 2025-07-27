@@ -48,8 +48,17 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
                   </span>
                 </div>
                 <div className="text-xs text-gray-600">
-                  素点: {result.rawScore >= 0 ? '+' : ''}{result.rawScore.toLocaleString()} | 
-                  ウマ: {result.umaPoints >= 0 ? '+' : ''}{result.umaPoints}
+                  {result.rank === 1 ? (
+                    <span>1位調整ポイント（2-4位の逆数）</span>
+                  ) : (
+                    <span>
+                      素点: {result.rawScore >= 0 ? '+' : ''}{result.rawScore.toLocaleString()}
+                      {result.roundedRawScore !== undefined && (
+                        <span> → {result.roundedRawScore >= 0 ? '+' : ''}{result.roundedRawScore.toLocaleString()}</span>
+                      )}
+                      {' | '}ウマ: {result.umaPoints >= 0 ? '+' : ''}{result.umaPoints}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -58,9 +67,15 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
       </div>
       
       <div className="mt-4 p-4 bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl border border-purple-200">
-        <p className="text-sm text-gray-700 text-center">
-          計算式: (素点 - {settings.oka.toLocaleString()}) ÷ 1000 × {settings.rate} + ウマ
+        <p className="text-sm text-gray-700 text-center mb-2">
+          <strong>計算式</strong>
         </p>
+        <div className="text-xs text-gray-600 space-y-1">
+          <p><strong>2-4位:</strong> (素点を5捨6入 ÷ 1000) + ウマ</p>
+          <p><strong>1位:</strong> -(2位+3位+4位のポイント)</p>
+          <p><strong>素点:</strong> 最終点数 - {settings.returnPoints.toLocaleString()}点</p>
+          <p><strong>5捨6入:</strong> 500以下切り捨て、600以上切り上げ</p>
+        </div>
       </div>
     </div>
   );
